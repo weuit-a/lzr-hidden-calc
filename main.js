@@ -58,13 +58,10 @@ function formatWithSuffix(num) {
 }
 
 function parseRPSInput(input) {
-  // Парсим число с суффиксом, например 1e5, 100Tg, 2.5M и т.п.
   input = input.trim();
-  // Попытка сразу в число
   let num = Number(input);
   if (!isNaN(num)) return num;
 
-  // Регекс для парсинга (число + суффикс)
   const regex = /^([\d.]+)\s*([a-zA-Z]+)$/;
   const match = input.match(regex);
   if (!match) return NaN;
@@ -73,7 +70,6 @@ function parseRPSInput(input) {
   const baseNum = Number(numberPart);
   if (isNaN(baseNum)) return NaN;
 
-  // Найдём степень по суффиксу (без учёта регистра)
   const sufObj = suffixesArr.find(s => s.suffix.toLowerCase() === suffixPart.toLowerCase());
   if (!sufObj) return NaN;
 
@@ -104,34 +100,25 @@ const rpsInput = document.getElementById("rpsInput");
 const currentRateDisplay = document.getElementById("currentRate");
 const parsedRateDisplay = document.getElementById("parsedRate");
 
-let currentRPS = 1e12; // по умолчанию 1T
+let currentRPS = 1e12;
 
 function renderRunes() {
   runesGrid.innerHTML = "";
 
   runes.forEach(rune => {
-    // Расчёт времени получения = шанс / RPS
-    let timeSeconds = rune.chance / currentRPS;
-
-    // Если exponential, то пока не считаем время до макс буста (по твоему условию)
-    // Просто считаем время до 1 руны (возможно можно убрать)
-
+    const timeSeconds = rune.chance / currentRPS;
     const timeStr = formatTime(timeSeconds);
 
-    // Форматируем шансы и число руны
     const chanceStr = formatWithSuffix(rune.chance);
-    const baseAmountStr = formatWithSuffix(rune.baseAmountScientific);
-
-    // Формируем boosts
-    const boostsStr = rune.boosts.map(b => 
-      `${b.multiplier}x ${b.name} (Max: ${b.max})`
+    const boostsStr = rune.boosts.map(b =>
+      `${b.multiplier}x ${b.name} (Max: ${b.max.toLocaleString()})`
     ).join(", ");
 
     const prefixStr = rune.prefix ? `<span class="rune-prefix">${rune.prefix}</span>` : "";
 
     const cardHTML = `
       <article class="rune-card">
-        <h3>${prefixStr} ${rune.name}</h3>
+        <h3>${prefixStr}${rune.name}</h3>
         <p><em>${rune.type}</em></p>
         <p>Chance: ${chanceStr}</p>
         <p>Boosts: ${boostsStr}</p>
@@ -161,5 +148,4 @@ function updateRPS() {
 
 rpsInput.addEventListener("input", updateRPS);
 
-// Инициализация
 updateRPS();
