@@ -1,77 +1,84 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=JetBrains+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Rune Time Calculator</title>
 <style>
+  :root {
+    --bg-color: #121212;
+    --card-bg: #1e1e1e;
+    --text-color: #e0e0e0;
+    --accent-color: #4cc9f0;
+    --instant-color: #00ff85;
+  }
+  
   body {
-    background-color: #111;
-    color: #eee;
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 2rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+      background: var(--bg-color);
+      color: var(--text-color);
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
   }
-  .container {
-    width: 100%;
-    max-width: 900px;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
+  
+  header {
+      text-align: center;
+      padding: 20px;
   }
-  .rps-card, .filter-card {
-    background: #222;
-    padding: 1rem;
-    border-radius: 8px;
+  
+  input, select, button {
+      background: #222;
+      color: var(--text-color);
+      border: 1px solid #333;
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-family: inherit;
+      transition: border 0.2s;
   }
-  input[type="text"] {
-    width: 100%;
-    padding: 0.5rem;
-    font-size: 1rem;
-    border-radius: 4px;
-    border: none;
-    color: #eee;
-    background: #333;
+  
+  input:focus, select:focus, button:hover {
+      border-color: var(--accent-color);
   }
-  label {
-    font-weight: bold;
-    margin-bottom: 0.3rem;
-    display: block;
-  }
-  #currentRate, #parsedRate {
-    margin-top: 0.3rem;
-  }
+  
   #runesGrid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 1rem;
-    margin-top: 1rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+      padding: 20px;
+      max-width: 1200px;
+      margin: auto;
   }
+  
   .rune-card {
-    background: #222;
-    border-radius: 8px;
-    padding: 1rem;
+      background: var(--card-bg);
+      padding: 16px;
+      border-radius: 12px;
+      box-shadow: 0 0 8px rgba(0,0,0,0.5);
+      transition: transform 0.2s, box-shadow 0.2s;
   }
-  .rune-prefix {
-    background: #ff8c00;
-    color: #111;
-    font-weight: bold;
-    padding: 0 6px;
-    border-radius: 4px;
-    margin-right: 6px;
-    font-size: 0.9rem;
+  
+  .rune-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 0 15px var(--accent-color);
   }
-  .controls {
-    display: flex;
-    gap: 1rem;
-    flex-wrap: wrap;
+  
+  .rune-card h3 {
+      margin: 0 0 8px;
+      color: var(--accent-color);
   }
-  .checkbox-label {
-    user-select: none;
-    cursor: pointer;
+  
+  .rune-card .chance {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      opacity: 0.9;
+  }
+  
+  .instant {
+      color: var(--instant-color);
+      font-weight: bold;
   }
 </style>
 </head>
