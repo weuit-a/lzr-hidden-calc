@@ -20,43 +20,20 @@
     <main class="container">
         <section class="rate-section fade-in">
             <h2>My Current Rate</h2>
-            <input type="text" placeholder="Enter your rate (e.g. 16.74tg)">
-            <p class="parsed-rate">Parsed Rate: 16.7 Tg RPS</p>
+            <input id="rateInput" type="text" placeholder="Enter your rate (e.g. 16.74tg)">
+            <p id="parsedRate" class="parsed-rate">Parsed Rate: 0 RPS</p>
         </section>
 
         <section class="filter-section fade-in">
-            <input type="text" placeholder="Filter runes by name...">
-            <label><input type="checkbox" checked> Hide Instant</label>
-            <select>
-                <option>Easiest First</option>
-                <option>Hardest First</option>
+            <input type="text" id="filterInput" placeholder="Filter runes by name...">
+            <label><input type="checkbox" id="hideInstant" checked> Hide Instant</label>
+            <select id="sortOrder">
+                <option value="easy">Easiest First</option>
+                <option value="hard">Hardest First</option>
             </select>
         </section>
 
-        <section class="rune-list">
-            <div class="rune-card next-target fade-in">
-                <h3>Next Target (&lt; 1 Hour)</h3>
-                <h2>Vanta</h2>
-                <p class="type">Color Rune</p>
-                <p class="progress">1 / 700 Tg</p>
-                <div class="bonuses">
-                    <p><span>x2</span> Rune Speed (Max: 3M)</p>
-                    <p><span>x1</span> Rune Bulk (Max: 3)</p>
-                    <p><span>x2</span> Tickets (Max: 1 DDe)</p>
-                </div>
-                <div class="time">41 seconds</div>
-            </div>
-
-            <div class="rune-card fade-in">
-                <h2>Frostbite</h2>
-                <p class="type">Arctic Rune</p>
-                <p class="progress">1 / 30 TTg</p>
-                <div class="bonuses">
-                    <p><span>x1.01</span> Rune Speed (Max: 100k)</p>
-                </div>
-                <div class="time">56 years, 302 days, 1 hour</div>
-            </div>
-        </section>
+        <section id="runeList" class="rune-list"></section>
     </main>
 
     <footer class="fade-in">
