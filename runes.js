@@ -1,39 +1,44 @@
+// Данные по рунам
+// Для каждой руны:
+// id, name, prefix (если есть), subtitle, baseAmountScientific (шанс или базовое значение в научной нотации),
+// rating (число), boosts — массив объектов { text, maxBoost (число или null) }
+
 const runes = [
   {
-    id: 1,
+    id: "vanta",
     name: "Vanta",
+    prefix: "LIMITED",
     subtitle: "Color Rune",
-    baseAmount: 700,
-    baseAmountScientific: 7e+95,
-    baseUnit: "Tg",
-    bonuses: [
-      { multiplier: 2, name: "Rune Speed", max: "3 M", type: "EXPONENTIAL" },
-      { multiplier: 1, name: "Rune Bulk", max: "3", type: "" },
-      { multiplier: 2, name: "Tickets", max: "1 DDe", type: "" },
+    baseAmountScientific: 7e95,
+    rating: 700,
+    boosts: [
+      { text: "x2 Rune Speed", maxBoost: 3000000 },
+      { text: "x1 Rune Bulk", maxBoost: 3 },
+      { text: "x2 Tickets", maxBoost: 1 }
     ],
   },
   {
-    id: 2,
+    id: "frostbite",
     name: "Frostbite",
     subtitle: "Arctic Rune",
-    baseAmount: 30,
-    baseAmountScientific: 3e+103,
-    baseUnit: "TTg",
-    bonuses: [
-      { multiplier: 1.01, name: "Rune Speed", max: "100 K", type: "EXPONENTIAL" },
+    baseAmountScientific: 3e103,
+    rating: 30,
+    boosts: [
+      { text: "x1.01 Rune Speed", maxBoost: 100000 }
     ],
   },
   {
-    id: 3,
+    id: "odyssey",
     name: "Odyssey",
-    subtitle: "limited 5M Royal",
-    baseAmount: 15,
-    baseAmountScientific: 2e+109,
-    baseUnit: "QnTg",
-    bonuses: [
-      { multiplier: 1, name: "Rune Bulk", max: "10 K", type: "" },
-      { multiplier: 1, name: "Rune Bulk", max: "50", type: "" },
-      { multiplier: 1, name: "Rune Speed", max: "50", type: "" },
+    prefix: "LIMITED",
+    subtitle: "5M Royal",
+    baseAmountScientific: 2e109,
+    rating: 15,
+    boosts: [
+      { text: "x1 Rune Bulk", maxBoost: 10000 },
+      { text: "x1 Rune Bulk", maxBoost: 50 },
+      { text: "x1 Rune Speed", maxBoost: 50 },
     ],
   },
+  
 ];
