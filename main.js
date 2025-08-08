@@ -5,12 +5,12 @@ const runesGrid = document.getElementById("runesGrid");
 const topStats = document.getElementById("topStats");
 const userRPSInput = document.getElementById("userRPS");
 
-// Форматируем большие числа с приставками (примерно)
+// Форматируем большие числа с приставками
 function formatLargeNumber(amount, unit, sci) {
   return `${amount} ${unit} (${sci.toExponential(2)})`;
 }
 
-// Форматирование времени в "56 years, 302 days, 1 hour" и т.п.
+// Форматирование времени в читаемый вид
 function formatLongTime(seconds) {
   if (seconds === null) return "-";
   if (!isFinite(seconds)) return "∞";
@@ -32,7 +32,7 @@ function formatLongTime(seconds) {
   return result;
 }
 
-// Парсер max строк ("3 M" -> 3_000_000)
+// Парсер max строк ("3 M" -> 3000000)
 function parseMaxString(str) {
   if (!str) return null;
   const units = {
@@ -58,15 +58,14 @@ function parseMaxString(str) {
   return num;
 }
 
-// Рассчёт времени получения 1 руны: 1 / (RPS * шанс)
+// Рассчёт времени получения 1 руны: time = 1 / (RPS * baseAmountScientific)
 function calcRuneTime(rune, userRPS) {
   if (userRPS <= 0) return Infinity;
-  if (!rune.chance || rune.chance <= 0) return Infinity;
-  return 1 / (userRPS * rune.chance);
+  if (!rune.baseAmountScientific || rune.baseAmountScientific <= 0) return Infinity;
+  return 1 / (userRPS * rune.baseAmountScientific);
 }
 
-// Рассчёт времени до максимума буста (только для экспоненциальных бонусов)
-// maxBoostTime = время получения 1 руны * max буста (в числах)
+// Рассчёт времени до максимума буста (только для EXPONENTIAL бонусов)
 function calcMaxBoostTime(bonus, runeTime) {
   if (!runeTime || !isFinite(runeTime)) return null;
   if (bonus.type !== "EXPONENTIAL") return null;
@@ -115,7 +114,7 @@ function renderRuneCard(rune, userRPS) {
   `;
 }
 
-// Вычисляем текущий рейтинг (примерно сумма baseAmountScientific, форматируем)
+// Пример расчёта и форматирования общего рейтинга (сумма baseAmountScientific)
 function calcCurrentRate() {
   let sum = runes.reduce((acc, r) => acc + r.baseAmountScientific, 0);
   return sum;
@@ -135,7 +134,7 @@ function renderAll() {
 
   let filtered = runes.filter((r) => r.name.toLowerCase().includes(filter));
 
-  // Hide instant - если добавим поле instant в данные, фильтруем
+  // TODO: Hide instant руны, если добавим поле instant
 
   switch (sortBy) {
     case "easiest":
@@ -156,13 +155,12 @@ function renderAll() {
       });
       break;
     case "rating":
-      // Нет рейтинга, игнорируем
+      // Нет рейтинга, пропускаем
       break;
   }
 
-  runesGrid.innerHTML = filtered.map(r => renderRuneCard(r, userRPS)).join("");
+  runesGrid.innerHTML = filtered.map((r) => renderRuneCard(r, userRPS)).join("");
 
-  // Обновляем топ статы
   const currentRateVal = calcCurrentRate();
   topStats.textContent = `My Current Rate: ${formatCurrentRate(currentRateVal)} | Parsed Rate: ${userRPS.toFixed(4)} RPS`;
 }
@@ -176,5 +174,4 @@ userRPSInput.addEventListener("input", () => {
   renderAll();
 });
 
-// Инициализация
 renderAll();
