@@ -94,7 +94,7 @@ export const runes = [
     chance: 1e13,
     boosts: [
       { name: "x1.05 Rune Speed", multiplier: 1.05, max: 25000 },
-      { name: "x2.5 Tickets", multiplier: 2.5, max: 1e8 },
+      { name: "x2.5 Tickets", multiplier: 2.5, max: 1e10 },
     ],
     exponential: false,
     prefix: "",
@@ -175,6 +175,45 @@ export const runes = [
     ],
     exponential: false,
     prefix: "",
+  },
+  {
+    id: 15,
+    name: "Gleam",
+    type: "Color Rune",
+    baseAmountScientific: 1e47,
+    chance: 1e47,
+    boosts: [
+      { name: "x1.01 Rune Speed", multiplier: 1.01, max: 1000 },
+      { name: "x1 Rune Bulk", multiplier: 1, max: 10000 },
+    ],
+    exponential: false,
+    prefix: "",
+  },
+  {
+    id: 16,
+    name: "Shyft",
+    type: "Basic Rune",
+    baseAmountScientific: 7.5e55,
+    chance: 7.5e55,
+    boosts: [
+      { name: "+1 Walkspeed", multiplier: 1, max: 30 },
+      { name: "+7 Rune Bulk", multiplier: 1, max: 500000 },
+    ],
+    exponential: false,
+    prefix: "",
+  },
+  {
+    id: 17,
+    name: "Overlord",
+    type: "5M Beginner",
+    baseAmountScientific: 5e58,
+    chance: 5e58,
+    boosts: [
+      { name: "x1.01 Energy", multiplier: 1, max: 1e303 },
+      { name: "+24 Rune Bulk", multiplier: 1, max: 1e8 },
+    ],
+    exponential: false,
+    prefix: "LIMITED",
   },
   // Добавляй остальные руны сюда...
 ];
