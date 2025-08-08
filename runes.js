@@ -6,7 +6,7 @@ export const runes = [
     baseAmountScientific: 7.5e9,
     chance: 7.5e9,
     boosts: [
-      { name: "+1Kx Sphere", multiplier: 1000, max: "inf" },
+      { name: "+1Kx Sphere", multiplier: 1000, max: Infinity },
     ],
     exponential: false,
     prefix: "FIRST",
