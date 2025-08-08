@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Rune Time Calculator</title>
 <style>
-  /* Основные стили */
   :root {
     --color-primary: #3a86ff;
     --color-bg: #f5f7fa;
@@ -64,7 +63,6 @@
     margin: 0 auto;
   }
 
-  /* Панель управления */
   .controls {
     display: flex;
     flex-wrap: wrap;
@@ -73,8 +71,8 @@
     align-items: center;
   }
 
-  .controls input[type="text"] {
-    flex-grow: 1;
+  .controls input[type="text"],
+  .controls input[type="number"] {
     padding: 0.5rem 1rem;
     font-size: 1rem;
     border: 1px solid #ccc;
@@ -82,7 +80,8 @@
     transition: border-color var(--transition);
   }
 
-  .controls input[type="text"]:focus {
+  .controls input[type="text"]:focus,
+  .controls input[type="number"]:focus {
     outline: none;
     border-color: var(--color-primary);
     box-shadow: 0 0 5px var(--color-primary);
@@ -116,10 +115,9 @@
     box-shadow: 0 0 5px var(--color-primary);
   }
 
-  /* Карточки рун */
   .runes-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit,minmax(220px,1fr));
+    grid-template-columns: repeat(auto-fit,minmax(280px,1fr));
     gap: 1.5rem;
   }
 
@@ -127,7 +125,7 @@
     background: var(--color-card-bg);
     border-radius: 12px;
     box-shadow: 0 2px 8px rgb(0 0 0 / 0.1);
-    padding: 1rem;
+    padding: 1rem 1.5rem;
     display: flex;
     flex-direction: column;
     transition: transform var(--transition), opacity var(--transition);
@@ -147,27 +145,30 @@
 
   .rune-name {
     font-weight: 700;
-    font-size: 1.2rem;
-    margin: 0.3rem 0;
+    font-size: 1.3rem;
+    margin: 0.3rem 0 0.6rem;
     text-align: center;
   }
 
-  .rune-time {
-    color: var(--color-muted);
-    font-size: 1rem;
-    text-align: center;
-    margin-bottom: 0.5rem;
+  .rune-info {
+    font-size: 0.95rem;
+    margin-bottom: 0.3rem;
+    color: var(--color-text);
+    line-height: 1.3;
+  }
+
+  .rune-info strong {
+    color: var(--color-primary);
   }
 
   .rune-rating {
     margin-top: auto;
-    font-size: 0.9rem;
+    font-size: 1rem;
     font-weight: 600;
     color: var(--color-primary);
     text-align: center;
   }
 
-  /* Статистика */
   .stats {
     margin-top: 2rem;
     font-size: 1.1rem;
@@ -176,7 +177,6 @@
     padding-top: 1rem;
   }
 
-  /* Адаптивность */
   @media (max-width: 600px) {
     header {
       flex-direction: column;
@@ -219,27 +219,43 @@
       <option value="time">Time Ascending</option>
       <option value="rating">Rating Descending</option>
     </select>
+    <label for="userRPS" style="margin-left:auto; min-width:180px;">
+      Your RPS:
+      <input
+        type="number"
+        id="userRPS"
+        min="0.0001"
+        step="0.0001"
+        value="0.01"
+        aria-label="User Runes per Second"
+        style="width:80px; margin-left: 0.5rem;"
+      />
+    </label>
   </section>
 
   <section class="runes-grid" id="runesGrid" aria-live="polite" aria-label="Runes list">
-    <!-- Карточки рун будут вставлены сюда динамически -->
+    <!-- Rune cards will be rendered here -->
   </section>
 
   <section class="stats" id="statsSection" aria-live="polite" aria-atomic="true">
-    <!-- Статистика пользователя -->
+    <!-- User stats -->
   </section>
 </main>
 
 <script>
-  // Данные рун — пример
+  // Rune data with extended parameters
   const runes = [
     {
       id: 1,
       name: "Flame Rune",
-      time: 120, // в секундах
+      time: 120, // base time for 1 rune (seconds)
       rating: 4.5,
       instant: false,
       icon: "🔥",
+      chance: 0.15,
+      boost: 2.5,
+      boostType: "linear",
+      maxBoostAmount: 10,
     },
     {
       id: 2,
@@ -248,14 +264,22 @@
       rating: 3.7,
       instant: true,
       icon: "💧",
+      chance: 0.3,
+      boost: 1.1,
+      boostType: "linear",
+      maxBoostAmount: 15,
     },
     {
       id: 3,
-      name: "Earth Rune",
+      name: "Vanta",
       time: 180,
       rating: 4.9,
       instant: false,
       icon: "🌍",
+      chance: 7e95,
+      boost: 1.000015,
+      boostType: "exponential",
+      maxBoostAmount: 3000000,
     },
     {
       id: 4,
@@ -264,6 +288,10 @@
       rating: 3.2,
       instant: true,
       icon: "💨",
+      chance: 0.45,
+      boost: 1.2,
+      boostType: "linear",
+      maxBoostAmount: 20,
     },
     {
       id: 5,
@@ -272,42 +300,56 @@
       rating: 5.0,
       instant: false,
       icon: "✨",
+      chance: 0.05,
+      boost: 3,
+      boostType: "linear",
+      maxBoostAmount: 5,
     },
-    // Добавьте больше рун по необходимости
   ];
 
-  // Элементы управления
   const searchInput = document.getElementById("searchInput");
   const hideInstantCheckbox = document.getElementById("hideInstant");
   const sortSelect = document.getElementById("sortSelect");
   const runesGrid = document.getElementById("runesGrid");
   const statsSection = document.getElementById("statsSection");
+  const userRPSInput = document.getElementById("userRPS");
 
-  // Форматирование времени в мин:сек
   function formatTime(seconds) {
+    if (seconds === Infinity) return "∞";
+    if (seconds === null || seconds === undefined) return "-";
     const m = Math.floor(seconds / 60);
-    const s = seconds % 60;
+    const s = Math.round(seconds % 60);
     return m > 0 ? `${m}m ${s}s` : `${s}s`;
   }
 
-  // Отрисовка карточек рун
+  // Calculate time to max boost ONLY for exponential boostType
+  function calcMaxBoostTime(rune, userRPS) {
+    if (userRPS <= 0) return Infinity;
+
+    if (rune.boostType === "exponential") {
+      // Простое приближение: базовое время * максимальное количество бустов / RPS
+      return (rune.time * rune.maxBoostAmount) / userRPS;
+    }
+
+    // Для линейных и других типов не считаем
+    return null;
+  }
+
   function renderRunes() {
     const filterText = searchInput.value.toLowerCase();
     const hideInstant = hideInstantCheckbox.checked;
     const sortBy = sortSelect.value;
+    const userRPS = parseFloat(userRPSInput.value) || 0.01;
 
-    // Фильтрация
     let filteredRunes = runes.filter(rune => {
       const matchName = rune.name.toLowerCase().includes(filterText);
       const matchInstant = hideInstant ? !rune.instant : true;
       return matchName && matchInstant;
     });
 
-    // Сортировка
     filteredRunes.sort((a, b) => {
       switch (sortBy) {
         case "easiest":
-          // Считаем "легче" руну ту, у которой меньше времени
           return a.time - b.time;
         case "name":
           return a.name.localeCompare(b.name);
@@ -320,7 +362,6 @@
       }
     });
 
-    // Отрисовка
     runesGrid.innerHTML = "";
 
     if (filteredRunes.length === 0) {
@@ -330,6 +371,10 @@
     }
 
     filteredRunes.forEach(rune => {
+      const timeToGetOneRune = rune.time / userRPS;
+      const maxBoostTime = calcMaxBoostTime(rune, userRPS);
+      const maxBoostTimeStr = formatTime(maxBoostTime);
+
       const card = document.createElement("article");
       card.className = "rune-card";
       card.setAttribute("tabindex", "0");
@@ -337,51 +382,47 @@
       card.innerHTML = `
         <div class="rune-icon" aria-hidden="true">${rune.icon}</div>
         <h3 class="rune-name">${rune.name}</h3>
-        <div class="rune-time">Time: ${formatTime(rune.time)}</div>
+        <div class="rune-info"><strong>Base time for 1 rune:</strong> ${formatTime(rune.time)}</div>
+        <div class="rune-info"><strong>Chance:</strong> ${(rune.chance * 100).toFixed(1)}%</div>
+        <div class="rune-info"><strong>Boost type:</strong> ${rune.boostType.charAt(0).toUpperCase() + rune.boostType.slice(1)}</div>
+        <div class="rune-info"><strong>Boost value:</strong> ${rune.boost}</div>
+        <div class="rune-info"><strong>Max boost amount:</strong> ${rune.maxBoostAmount.toLocaleString()}</div>
+        <div class="rune-info"><strong>Time to get 1 rune at your RPS:</strong> ${formatTime(timeToGetOneRune)}</div>
+        <div class="rune-info"><strong>Time to max boost at your RPS:</strong> ${maxBoostTimeStr}</div>
         <div class="rune-rating">Rating: ${rune.rating.toFixed(1)}</div>
       `;
 
       runesGrid.appendChild(card);
     });
 
-    // Обновление статистики
-    updateStats(filteredRunes);
+    updateStats(filteredRunes, userRPS);
   }
 
-  // Обновление статистики
-  function updateStats(runesArray) {
+  function updateStats(runesArray, userRPS) {
     const totalTime = runesArray.reduce((sum, r) => sum + r.time, 0);
-    // Допустим, рейтинг - среднее арифметическое
     const avgRating =
       runesArray.reduce((sum, r) => sum + r.rating, 0) / runesArray.length;
-
-    // Допустим, скорость получения — 1 руна / среднее время
-    const avgTime = totalTime / runesArray.length;
-    const rps = avgTime ? (1 / avgTime).toFixed(3) : "0";
+    const rps = userRPS.toFixed(4);
 
     statsSection.innerHTML = `
       <strong>Current Stats:</strong><br/>
       Total Runes: ${runesArray.length} <br/>
-      Total Time: ${formatTime(totalTime)} <br/>
+      Total Base Time: ${formatTime(totalTime)} <br/>
       Average Rating: ${avgRating.toFixed(2)} <br/>
-      Speed: ${rps} RPS (Runes per second)
+      Your RPS (Runes per second): ${rps}
     `;
   }
 
-  // Обработчики событий
-  searchInput.addEventListener("input", () => {
+  searchInput.addEventListener("input", renderRunes);
+  hideInstantCheckbox.addEventListener("change", renderRunes);
+  sortSelect.addEventListener("change", renderRunes);
+  userRPSInput.addEventListener("input", () => {
+    let val = parseFloat(userRPSInput.value);
+    if (val < 0.0001 || isNaN(val)) userRPSInput.value = "0.0001";
     renderRunes();
   });
 
-  hideInstantCheckbox.addEventListener("change", () => {
-    renderRunes();
-  });
-
-  sortSelect.addEventListener("change", () => {
-    renderRunes();
-  });
-
-  // Инициализация
+  // Initial render
   renderRunes();
 </script>
 
