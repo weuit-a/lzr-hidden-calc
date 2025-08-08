@@ -99,16 +99,32 @@ const runesGrid = document.getElementById("runesGrid");
 const rpsInput = document.getElementById("rpsInput");
 const currentRateDisplay = document.getElementById("currentRate");
 const parsedRateDisplay = document.getElementById("parsedRate");
+const filterInput = document.getElementById("filterInput");
+const hideInstantCheckbox = document.getElementById("hideInstant");
 
-let currentRPS = 1e12;
+let currentRPS = "";
+let currentFilter = "";
+let hideInstant = true;
 
 function renderRunes() {
   runesGrid.innerHTML = "";
 
-  runes.forEach(rune => {
+  const filteredRunes = runes.filter(rune => {
+    // Фильтр по названию (без учёта регистра)
+    if (!rune.name.toLowerCase().includes(currentFilter.toLowerCase())) return false;
+
+    // Рассчёт времени до получения руны
+    const timeSeconds = rune.chance / currentRPS;
+
+    // Если скрываем инстанты — пропускаем их
+    if (hideInstant && timeSeconds < 1) return false;
+
+    return true;
+  });
+
+  filteredRunes.forEach(rune => {
     const timeSeconds = rune.chance / currentRPS;
     const timeStr = formatTime(timeSeconds);
-
     const chanceStr = formatWithSuffix(rune.chance);
     const boostsStr = rune.boosts.map(b =>
       `${b.multiplier}x ${b.name} (Max: ${b.max.toLocaleString()})`
@@ -146,6 +162,19 @@ function updateRPS() {
   renderRunes();
 }
 
-rpsInput.addEventListener("input", updateRPS);
+function updateFilter() {
+  currentFilter = filterInput.value.trim();
+  renderRunes();
+}
 
+function updateHideInstant() {
+  hideInstant = hideInstantCheckbox.checked;
+  renderRunes();
+}
+
+rpsInput.addEventListener("input", updateRPS);
+filterInput.addEventListener("input", updateFilter);
+hideInstantCheckbox.addEventListener("change", updateHideInstant);
+
+// Инициализация страницы
 updateRPS();
