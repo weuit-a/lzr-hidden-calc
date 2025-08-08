@@ -1,11 +1,10 @@
-// Массив рун
 const runes = [
   {
     id: 1,
     name: "Vanta",
     subtitle: "Color Rune",
-    baseAmount: 700, // для отображения
-    baseAmountScientific: 7e+95, // коэффициент "шанс"
+    baseAmount: 700,
+    baseAmountScientific: 7e+95,
     baseUnit: "Tg",
     bonuses: [
       { multiplier: 2, name: "Rune Speed", max: "3 M", type: "EXPONENTIAL" },
