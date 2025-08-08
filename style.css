@@ -5,35 +5,40 @@ body {
     color: white;
 }
 
+/* ===== HEADER ===== */
 header {
     text-align: center;
     padding: 20px;
 }
-
 header h1 {
     font-size: 2.2em;
-    color: #1da1f2;
+    background: linear-gradient(90deg, #1da1f2, #4fc3f7);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
-
 header p {
     color: #ccc;
 }
-
 .info-link {
     display: inline-block;
     margin-top: 10px;
-    padding: 10px;
-    background-color: #152238;
+    padding: 10px 14px;
+    background: linear-gradient(90deg, #152238, #1da1f2);
     border-radius: 8px;
     color: #4fc3f7;
     text-decoration: none;
+    transition: 0.3s;
+}
+.info-link:hover {
+    transform: scale(1.05);
+    background: linear-gradient(90deg, #1da1f2, #50c9ce);
 }
 
+/* ===== TABS ===== */
 .tabs {
     display: flex;
     background-color: #152238;
 }
-
 .tabs .tab {
     flex: 1;
     padding: 15px;
@@ -42,26 +47,27 @@ header p {
     color: #4fc3f7;
     cursor: pointer;
     font-size: 1em;
+    transition: background 0.3s;
 }
-
 .tabs .active {
     background-color: #1b2a41;
     font-weight: bold;
 }
 
+/* ===== CONTAINER ===== */
 .container {
     max-width: 900px;
     margin: auto;
     padding: 20px;
 }
 
+/* ===== RATE SECTION ===== */
 .rate-section {
     background-color: #1b2a41;
     padding: 20px;
     border-radius: 8px;
     margin-bottom: 20px;
 }
-
 .rate-section input {
     width: 100%;
     padding: 10px;
@@ -70,12 +76,12 @@ header p {
     border-radius: 5px;
     margin-top: 10px;
 }
-
 .parsed-rate {
     margin-top: 10px;
     color: #4fc3f7;
 }
 
+/* ===== FILTERS ===== */
 .filter-section {
     display: flex;
     justify-content: space-between;
@@ -86,52 +92,43 @@ header p {
     flex-wrap: wrap;
     gap: 10px;
 }
-
-.filter-section input[type="text"] {
-    padding: 8px;
-    border: none;
-    border-radius: 5px;
-}
-
+.filter-section input[type="text"],
 .filter-section select {
     padding: 8px;
     border: none;
     border-radius: 5px;
 }
 
+/* ===== RUNE CARDS ===== */
 .rune-list {
     display: grid;
     gap: 20px;
 }
-
 .rune-card {
     background-color: #1b2a41;
     padding: 20px;
     border-radius: 10px;
     position: relative;
+    transform: translateY(20px);
+    opacity: 0;
+    transition: all 0.6s ease-out;
 }
-
 .rune-card h2 {
     margin-top: 0;
 }
-
 .rune-card .type {
     color: #aaa;
 }
-
 .rune-card .progress {
     color: #4fc3f7;
 }
-
 .bonuses p {
     margin: 5px 0;
 }
-
 .bonuses span {
     color: #00ff9d;
     font-weight: bold;
 }
-
 .time {
     position: absolute;
     top: 20px;
@@ -141,7 +138,25 @@ header p {
     border-radius: 5px;
     color: #4fc3f7;
 }
-
 .next-target {
     border: 2px solid #ffd700;
+}
+
+/* ===== FOOTER ===== */
+footer {
+    text-align: center;
+    padding: 20px;
+    background-color: #152238;
+    margin-top: 30px;
+}
+
+/* ===== FADE-IN ANIMATION ===== */
+.fade-in {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.6s ease-out;
+}
+.fade-in.show {
+    opacity: 1;
+    transform: translateY(0);
 }
