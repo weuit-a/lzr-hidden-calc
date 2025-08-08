@@ -1,60 +1,66 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hidden Runes LZR</title>
+    <title>Rune Time Calculator</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Шапка -->
     <header class="header">
-        <div class="container">
-            <h1 class="logo">Logo1</h1>
-            <nav>
-                <ul class="nav">
-                    <li><a href="#about">Test</a></li>
-                    <li><a href="#projects">Test1</a></li>
-                    <li><a href="#contact">Test2</a></li>
-                </ul>
-            </nav>
-        </div>
+        <h1>Rune Time Calculator</h1>
+        <p>A strategic tool for planning your progression. Times shown are for a single rune.</p>
+        <a href="#" class="info-link">📄 Check out the Comprehensive Google Doc!</a>
     </header>
 
-    <!-- Главная секция -->
-    <section class="hero">
-        <div class="container">
-            <h2>Welcome!</h2>
-            <p>There will be content later.</p>
-            <a href="#about" class="btn">Thank you!</a>
-        </div>
-    </section>
+    <nav class="tabs">
+        <button class="tab active">Rune Calculator</button>
+    </nav>
 
-    <!-- Проекты -->
-    <section id="projects" class="section alt-bg">
-        <div class="container">
-            <h2>Мои проекты</h2>
-            <div class="cards">
-                <div class="card">Проект 1</div>
-                <div class="card">Проект 2</div>
-                <div class="card">Проект 3</div>
+    <main class="container">
+        <section class="rate-section">
+            <h2>My Current Rate</h2>
+            <input type="text" placeholder="Enter your rate (e.g. 16.74tg)">
+            <p class="parsed-rate">Parsed Rate: 16.7 Tg RPS</p>
+        </section>
+
+        <section class="filter-section">
+            <input type="text" placeholder="Filter runes by name...">
+            <label><input type="checkbox" checked> Hide Instant</label>
+            <select>
+                <option>Easiest First</option>
+                <option>Hardest First</option>
+            </select>
+        </section>
+
+        <section class="rune-list">
+            <div class="rune-card next-target">
+                <h3>Next Target (&lt; 1 Hour)</h3>
+                <h2>Vanta</h2>
+                <p class="type">Color Rune</p>
+                <p class="progress">1 / 700 Tg</p>
+                <div class="bonuses">
+                    <p><span>x2</span> Rune Speed (Max: 3M)</p>
+                    <p><span>x1</span> Rune Bulk (Max: 3)</p>
+                    <p><span>x2</span> Tickets (Max: 1 DDe)</p>
+                </div>
+                <div class="time">41 seconds</div>
             </div>
-        </div>
-    </section>
 
-    <!-- Контакты -->
-    <section id="contact" class="section">
-        <div class="container">
-            <h2>Свяжитесь со мной</h2>
-            <p>Email: example@mail.com</p>
-        </div>
-    </section>
+            <div class="rune-card">
+                <h2>Frostbite</h2>
+                <p class="type">Arctic Rune</p>
+                <p class="progress">1 / 30 TTg</p>
+                <div class="bonuses">
+                    <p><span>x1.01</span> Rune Speed (Max: 100k)</p>
+                </div>
+                <div class="time">56 years, 302 days, 1 hour</div>
+            </div>
+        </section>
+    </main>
 
-    <!-- Подвал -->
-    <footer class="footer">
-        <div class="container">
-            <p>&copy; 2025 MySite. Все права защищены.</p>
-        </div>
+    <footer>
+        <p>&copy; 2025 Rune Time Calculator</p>
     </footer>
 
     <script src="script.js"></script>
