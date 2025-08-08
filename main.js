@@ -127,7 +127,7 @@ function renderRunes() {
     const timeStr = formatTime(timeSeconds);
     const chanceStr = formatWithSuffix(rune.chance);
     const boostsStr = rune.boosts.map(b =>
-      `${b.multiplier}x ${b.name} (Max: ${b.max.toLocaleString()})`
+      `${b.name} (Max: ${formatWithSuffix(b.max)})`
     ).join(", ");
 
     const prefixStr = rune.prefix ? `<span class="rune-prefix">${rune.prefix}</span>` : "";
