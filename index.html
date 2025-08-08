@@ -9,14 +9,23 @@
     background-color: #111;
     color: #eee;
     font-family: Arial, sans-serif;
-    margin: 1rem;
+    margin: 0;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
-  .rps-card {
+  .container {
+    width: 100%;
+    max-width: 900px;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .rps-card, .filter-card {
     background: #222;
     padding: 1rem;
-    margin-bottom: 1rem;
     border-radius: 8px;
-    max-width: 400px;
   }
   input[type="text"] {
     width: 100%;
@@ -27,13 +36,19 @@
     color: #eee;
     background: #333;
   }
+  label {
+    font-weight: bold;
+    margin-bottom: 0.3rem;
+    display: block;
+  }
   #currentRate, #parsedRate {
-    margin: 0.2rem 0;
+    margin-top: 0.3rem;
   }
   #runesGrid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 1rem;
+    margin-top: 1rem;
   }
   .rune-card {
     background: #222;
@@ -49,20 +64,45 @@
     margin-right: 6px;
     font-size: 0.9rem;
   }
+  .controls {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  .checkbox-label {
+    user-select: none;
+    cursor: pointer;
+  }
 </style>
 </head>
 <body>
 
-<div class="rps-card" role="region" aria-label="Current RPS input">
-  <label for="rpsInput">Введите ваш RPS (например: 1e5, 100Tg, 2.5M):</label>
-  <input id="rpsInput" type="text" value="1e12" aria-describedby="currentRate parsedRate" />
-  <div id="currentRate">My Current Rate: 1e12</div>
-  <div id="parsedRate">Parsed Rate: 1T RPS</div>
-</div>
+<div class="container">
 
-<section id="runesGrid" aria-label="Runes list">
-  <!-- Карточки рун появятся здесь -->
-</section>
+  <div class="rps-card" role="region" aria-label="Current RPS input">
+    <label for="rpsInput">e.g. 1.5e6, 1.25M, 500Tg:</label>
+    <input id="rpsInput" type="text" value="" aria-describedby="currentRate parsedRate" />
+    <div id="currentRate">My Current Rate: nil</div>
+    <div id="parsedRate">Parsed Rate: nil</div>
+  </div>
+
+  <div class="filter-card" role="region" aria-label="Filters">
+    <div class="controls">
+      <div style="flex-grow:1;">
+        <label for="filterInput">Filter runes by name:</label>
+        <input id="filterInput" type="text" placeholder="Write here rune name..." />
+      </div>
+      <div style="display:flex; align-items:center;">
+        <input type="checkbox" id="hideInstant" />
+        <label for="hideInstant" class="checkbox-label" style="margin-left: 0.3rem;">Hide Instant</label>
+      </div>
+    </div>
+  </div>
+
+  <section id="runesGrid" aria-label="Runes list">
+    <!-- Карточки рун появятся здесь -->
+  </section>
+</div>
 
 <script type="module" src="./main.js"></script>
 </body>
