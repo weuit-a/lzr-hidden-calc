@@ -84,7 +84,7 @@ export const runes = [
       { name: "-0.1 RToken Cooldown", multiplier: 1, max: 60 },
     ],
     exponential: false,
-    prefix: "LIMITED",
+    prefix: "",
   },
   {
     id: 8,
@@ -97,7 +97,7 @@ export const runes = [
       { name: "x2.5 Tickets", multiplier: 2.5, max: 1e8 },
     ],
     exponential: false,
-    prefix: "LIMITED",
+    prefix: "",
   },
   // Добавляй остальные руны сюда...
 ];
