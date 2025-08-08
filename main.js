@@ -1,277 +1,165 @@
-document.addEventListener("DOMContentLoaded", () => {
-  // === Суффиксы и их степени для парсинга RPS ===
-  const suffixes = {
-    // ... (тот же объект suffixes, что и раньше)
-    "Mc": 3000003,
-    "Na": 3000000003,
-    "Pi": 3000000000003,
-    "Fm": 3000000000000003,
-    "At": 3000000000000000003,
-    "Zp": 3000000000000000000003,
-    "Yc": 3000000000000000000000003,
-    "Xo": 3000000000000000000000000003,
+import { runes } from "./runes.js";
 
-    "Tr": 903,
-    "Qa": 1203,
-    "Qi": 1503,
-    "Se": 1803,
-    "Si": 2103,
-    "Ot": 2403,
-    "Ni": 2703,
-    "Mi": 3003,
+const suffixesArr = [
+  { suffix: "TgCe", power: 1e393 },
+  { suffix: "NoTg", power: 1e120 },
+  { suffix: "OcTg", power: 1e117 },
+  { suffix: "SpTg", power: 1e114 },
+  { suffix: "SxTg", power: 1e111 },
+  { suffix: "QnTg", power: 1e108 },
+  { suffix: "QdTg", power: 1e105 },
+  { suffix: "TTg", power: 1e102 },
+  { suffix: "DTg", power: 1e99 },
+  { suffix: "UTg", power: 1e96 },
+  { suffix: "Tg", power: 1e93 },
+  { suffix: "NoVt", power: 1e90 },
+  { suffix: "OcVt", power: 1e87 },
+  { suffix: "SpVt", power: 1e84 },
+  { suffix: "SxVt", power: 1e81 },
+  { suffix: "QnVt", power: 1e78 },
+  { suffix: "QdVt", power: 1e75 },
+  { suffix: "TVt", power: 1e72 },
+  { suffix: "DVt", power: 1e69 },
+  { suffix: "UVt", power: 1e66 },
+  { suffix: "Vt", power: 1e63 },
+  { suffix: "NoDe", power: 1e60 },
+  { suffix: "OcDe", power: 1e57 },
+  { suffix: "SpDe", power: 1e54 },
+  { suffix: "SxDe", power: 1e51 },
+  { suffix: "QnDe", power: 1e48 },
+  { suffix: "QdDe", power: 1e45 },
+  { suffix: "TDe", power: 1e42 },
+  { suffix: "DDe", power: 1e39 },
+  { suffix: "UDe", power: 1e36 },
+  { suffix: "No", power: 1e30 },
+  { suffix: "Oc", power: 1e27 },
+  { suffix: "Sp", power: 1e24 },
+  { suffix: "Sx", power: 1e21 },
+  { suffix: "Qn", power: 1e18 },
+  { suffix: "Qd", power: 1e15 },
+  { suffix: "T", power: 1e12 },
+  { suffix: "B", power: 1e9 },
+  { suffix: "M", power: 1e6 },
+  { suffix: "K", power: 1e3 },
+];
 
-    "Du": 603,
-    "Ng": 573,
-    "Og": 543,
-    "Sg": 513,
-    "Nosg": 510,
-    "Ocsg": 507,
-    "Spsg": 504,
-    "Sxsg": 501,
-    "Qnsg": 498,
-    "Qdsg": 495,
-    "Tsg": 492,
-    "Dsg": 489,
-    "Usg": 486,
+function formatWithSuffix(num) {
+  if (!isFinite(num)) return "∞";
+  if (num === 0) return "0";
 
-    "Tg": 93,
-    "NoTg": 120,
-    "OcTg": 117,
-    "SpTg": 114,
-    "SxTg": 111,
-    "QnTg": 108,
-    "QdTg": 105,
-    "TTg": 102,
-    "DTg": 99,
-    "UTg": 96,
-
-    "TDe": 42,
-    "DDe": 39,
-    "UDe": 36,
-
-    "K": 3,
-    "M": 6,
-    "B": 9,
-    "T": 12,
-    // ...добавьте остальные суффиксы, если нужно
-  };
-
-  const suffixKeysSorted = Object.keys(suffixes).sort((a,b)=>b.length - a.length);
-
-  function parseRPS(input) {
-    input = input.trim();
-    if (!input) return NaN;
-
-    // Если напрямую число (в т.ч. научная нотация)
-    const directNum = Number(input);
-    if (!isNaN(directNum)) return directNum;
-
-    const regex = /^([\d.]+)\s*([a-zA-Z]+)$/;
-    const m = input.match(regex);
-    if (!m) return NaN;
-
-    const num = parseFloat(m[1]);
-    if (isNaN(num)) return NaN;
-
-    const suffix = m[2];
-
-    for (const key of suffixKeysSorted) {
-      if (suffix.startsWith(key)) {
-        return num * Math.pow(10, suffixes[key]);
-      }
-    }
-
-    return NaN;
-  }
-
-  function formatScientific(num) {
-    if (!isFinite(num)) return "∞";
-    if (num === 0) return "0";
-
-    const exp = Math.floor(Math.log10(num));
-    const mant = num / Math.pow(10, exp);
-    const mantStr = mant.toFixed(2).replace(/\.?0+$/, "");
-    return `${mantStr}e${exp}`;
-  }
-
-  function formatTime(seconds) {
-    if (!isFinite(seconds)) return "∞";
-    if (seconds < 1) return `${(seconds * 1000).toFixed(0)} ms`;
-
-    const units = [
-      { label: "year", seconds: 31536000 },
-      { label: "day", seconds: 86400 },
-      { label: "hour", seconds: 3600 },
-      { label: "minute", seconds: 60 },
-      { label: "second", seconds: 1 },
-    ];
-
-    let remaining = seconds;
-    const parts = [];
-
-    for (const u of units) {
-      const val = Math.floor(remaining / u.seconds);
-      if (val > 0) {
-        parts.push(`${val} ${u.label}${val > 1 ? "s" : ""}`);
-        remaining -= val * u.seconds;
-      }
-      if (parts.length >= 3) break;
-    }
-
-    if (parts.length === 0) return "0 seconds";
-    return parts.join(", ");
-  }
-
-  function calcBaseTime(rune, rps) {
-    if (rps <= 0) return Infinity;
-    return rune.baseAmountScientific / rps;
-  }
-
-  // --- DOM ---
-  const rpsInput = document.getElementById("userRPSInput");
-  const currentRateParsed = document.getElementById("currentRateParsed");
-  const searchInput = document.getElementById("searchInput");
-  const hideInstantCheckbox = document.getElementById("hideInstantCheckbox");
-  const sortSelect = document.getElementById("sortSelect");
-  const runesGrid = document.getElementById("runesGrid");
-  const themeToggle = document.getElementById("themeToggle");
-
-  let currentRPS = parseRPS(rpsInput.value);
-
-  function renderRunes() {
-    let filtered = runes.slice();
-
-    const filterText = searchInput.value.toLowerCase();
-    if (filterText) {
-      filtered = filtered.filter(r =>
-        r.name.toLowerCase().includes(filterText)
-      );
-    }
-
-    if (hideInstantCheckbox.checked) {
-      filtered = filtered.filter(r => !(r.prefix && r.prefix.toUpperCase() === "INSTANT"));
-    }
-
-    switch (sortSelect.value) {
-      case "easiest":
-      case "time":
-        filtered.sort((a,b) => calcBaseTime(a, currentRPS) - calcBaseTime(b, currentRPS));
-        break;
-      case "name":
-        filtered.sort((a,b) => a.name.localeCompare(b.name));
-        break;
-      case "rating":
-        filtered.sort((a,b) => b.rating - a.rating);
-        break;
-    }
-
-    runesGrid.innerHTML = "";
-
-    for (const rune of filtered) {
-      const card = document.createElement("article");
-      card.className = "rune-card";
-      card.tabIndex = 0;
-
-      const header = document.createElement("div");
-      header.className = "rune-header";
-
-      const title = document.createElement("h2");
-      title.className = "rune-title";
-      title.textContent = rune.name;
-      header.appendChild(title);
-
-      if (rune.prefix) {
-        const prefixSpan = document.createElement("span");
-        prefixSpan.className = "rune-prefix";
-        prefixSpan.textContent = rune.prefix;
-        header.appendChild(prefixSpan);
-      }
-
-      card.appendChild(header);
-
-      if (rune.subtitle) {
-        const subtitle = document.createElement("div");
-        subtitle.className = "rune-subtitle";
-        subtitle.textContent = rune.subtitle;
-        card.appendChild(subtitle);
-      }
-
-      const baseNum = document.createElement("div");
-      baseNum.className = "rune-large-num";
-      baseNum.textContent = "Base Amount: " + formatScientific(rune.baseAmountScientific);
-      card.appendChild(baseNum);
-
-      const baseTimeSec = calcBaseTime(rune, currentRPS);
-      const timeInfo = document.createElement("div");
-      timeInfo.className = "time-info";
-      timeInfo.textContent = "Base Time: " + formatTime(baseTimeSec);
-      card.appendChild(timeInfo);
-
-      if (rune.boosts && rune.boosts.length) {
-        const boostsDiv = document.createElement("div");
-        boostsDiv.className = "boosts";
-
-        for (const boost of rune.boosts) {
-          const boostItem = document.createElement("div");
-          boostItem.className = "boost-item";
-
-          const boostText = document.createElement("span");
-          boostText.textContent = boost.text;
-          boostItem.appendChild(boostText);
-
-          if (boost.maxBoost !== null && boost.maxBoost !== undefined) {
-            const boostMax = document.createElement("span");
-            boostMax.className = "boost-max";
-            boostMax.textContent = ` (Max: ${formatScientific(boost.maxBoost)})`;
-            boostItem.appendChild(boostMax);
-          }
-
-          boostsDiv.appendChild(boostItem);
-        }
-
-        card.appendChild(boostsDiv);
-      }
-
-      runesGrid.appendChild(card);
+  for (const { suffix, power } of suffixesArr) {
+    if (num >= power) {
+      const val = num / power;
+      const valStr = val.toFixed(2).replace(/\.?0+$/, "");
+      return `${valStr}${suffix}`;
     }
   }
+  return num.toString();
+}
 
-  function updateRPSDisplay() {
-    const inputVal = rpsInput.value.trim();
-    const parsed = parseRPS(inputVal);
-    currentRPS = parsed;
+function parseRPSInput(input) {
+  // Парсим число с суффиксом, например 1e5, 100Tg, 2.5M и т.п.
+  input = input.trim();
+  // Попытка сразу в число
+  let num = Number(input);
+  if (!isNaN(num)) return num;
 
-    if (isNaN(parsed)) {
-      currentRateParsed.textContent = `Invalid RPS input`;
-    } else {
-      currentRateParsed.textContent = `My Current Rate: ${inputVal} | Parsed Rate: ${formatScientific(parsed)}`;
-    }
-  }
+  // Регекс для парсинга (число + суффикс)
+  const regex = /^([\d.]+)\s*([a-zA-Z]+)$/;
+  const match = input.match(regex);
+  if (!match) return NaN;
 
-  rpsInput.addEventListener("input", () => {
-    updateRPSDisplay();
-    renderRunes();
+  const [, numberPart, suffixPart] = match;
+  const baseNum = Number(numberPart);
+  if (isNaN(baseNum)) return NaN;
+
+  // Найдём степень по суффиксу (без учёта регистра)
+  const sufObj = suffixesArr.find(s => s.suffix.toLowerCase() === suffixPart.toLowerCase());
+  if (!sufObj) return NaN;
+
+  return baseNum * sufObj.power;
+}
+
+function formatTime(seconds) {
+  if (seconds < 1) return "Instant";
+
+  const days = Math.floor(seconds / (3600 * 24));
+  seconds %= 3600 * 24;
+  const hours = Math.floor(seconds / 3600);
+  seconds %= 3600;
+  const mins = Math.floor(seconds / 60);
+  seconds = Math.floor(seconds % 60);
+
+  const parts = [];
+  if (days) parts.push(`${days}d`);
+  if (hours) parts.push(`${hours}h`);
+  if (mins) parts.push(`${mins}m`);
+  if (seconds || parts.length === 0) parts.push(`${seconds}s`);
+
+  return parts.join(", ");
+}
+
+const runesGrid = document.getElementById("runesGrid");
+const rpsInput = document.getElementById("rpsInput");
+const currentRateDisplay = document.getElementById("currentRate");
+const parsedRateDisplay = document.getElementById("parsedRate");
+
+let currentRPS = 1e12; // по умолчанию 1T
+
+function renderRunes() {
+  runesGrid.innerHTML = "";
+
+  runes.forEach(rune => {
+    // Расчёт времени получения = шанс / RPS
+    let timeSeconds = rune.chance / currentRPS;
+
+    // Если exponential, то пока не считаем время до макс буста (по твоему условию)
+    // Просто считаем время до 1 руны (возможно можно убрать)
+
+    const timeStr = formatTime(timeSeconds);
+
+    // Форматируем шансы и число руны
+    const chanceStr = formatWithSuffix(rune.chance);
+    const baseAmountStr = formatWithSuffix(rune.baseAmountScientific);
+
+    // Формируем boosts
+    const boostsStr = rune.boosts.map(b => 
+      `${b.multiplier}x ${b.name} (Max: ${b.max})`
+    ).join(", ");
+
+    const prefixStr = rune.prefix ? `<span class="rune-prefix">${rune.prefix}</span>` : "";
+
+    const cardHTML = `
+      <article class="rune-card">
+        <h3>${prefixStr} ${rune.name}</h3>
+        <p><em>${rune.type}</em></p>
+        <p>Chance: ${chanceStr}</p>
+        <p>Boosts: ${boostsStr}</p>
+        <p>Time to get: <strong>${timeStr}</strong></p>
+      </article>
+    `;
+
+    runesGrid.insertAdjacentHTML("beforeend", cardHTML);
   });
+}
 
-  searchInput.addEventListener("input", renderRunes);
-  hideInstantCheckbox.addEventListener("change", renderRunes);
-  sortSelect.addEventListener("change", renderRunes);
+function updateRPS() {
+  const val = rpsInput.value;
+  const parsed = parseRPSInput(val);
 
-  function toggleTheme() {
-    const body = document.body;
-    if (body.classList.contains("dark")) {
-      body.classList.remove("dark");
-      body.classList.add("light");
-      themeToggle.textContent = "Dark Theme";
-    } else {
-      body.classList.remove("light");
-      body.classList.add("dark");
-      themeToggle.textContent = "Light Theme";
-    }
+  if (!isNaN(parsed) && parsed > 0) {
+    currentRPS = parsed;
+    currentRateDisplay.textContent = `My Current Rate: ${val}`;
+    parsedRateDisplay.textContent = `Parsed Rate: ${formatWithSuffix(parsed)} RPS`;
+  } else {
+    currentRateDisplay.textContent = "My Current Rate: Invalid input";
+    parsedRateDisplay.textContent = "";
   }
 
-  themeToggle.addEventListener("click", toggleTheme);
-
-  updateRPSDisplay();
   renderRunes();
-});
+}
+
+rpsInput.addEventListener("input", updateRPS);
+
+// Инициализация
+updateRPS();
