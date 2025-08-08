@@ -1,281 +1,340 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" >
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Rune Time Calculator</title>
-<style>
-  :root {
-    --color-primary: #3a86ff;
-    --color-bg: #f5f7fa;
-    --color-card-bg: #fff;
-    --color-text: #333;
-    --color-muted: #666;
-    --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    --transition: 0.3s ease;
-  }
-
-  * {
-    box-sizing: border-box;
-  }
-
-  body {
-    margin: 0;
-    font-family: var(--font-family);
-    background: var(--color-bg);
-    color: var(--color-text);
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-  }
-
-  header {
-    background: var(--color-primary);
-    color: white;
-    padding: 1rem 2rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-  }
-  header h1 {
-    margin: 0;
-    font-weight: 700;
-    font-size: 1.5rem;
-  }
-  header a {
-    color: #dbe9ff;
-    font-weight: 500;
-    text-decoration: none;
-    transition: color 0.3s;
-  }
-  header a:hover {
-    color: white;
-    text-decoration: underline;
-  }
-
-  main {
-    max-width: 1100px;
-    margin: 2rem auto 3rem;
-    padding: 0 1rem;
-    flex-grow: 1;
-  }
-
-  .top-stats {
-    font-weight: 600;
-    font-size: 1.1rem;
-    margin-bottom: 1rem;
-    color: var(--color-primary);
-  }
-
-  .controls {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-    margin-bottom: 2rem;
-    align-items: center;
-  }
-  .controls input[type="text"],
-  .controls input[type="number"],
-  .controls select {
-    padding: 0.5rem 1rem;
-    font-size: 1rem;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    transition: border-color var(--transition);
-  }
-  .controls input[type="text"]:focus,
-  .controls input[type="number"]:focus,
-  .controls select:focus {
-    outline: none;
-    border-color: var(--color-primary);
-    box-shadow: 0 0 5px var(--color-primary);
-  }
-  .controls label {
-    display: flex;
-    align-items: center;
-    font-size: 0.95rem;
-    color: var(--color-muted);
-    cursor: pointer;
-  }
-  .controls label input[type="checkbox"] {
-    margin-right: 0.5rem;
-    cursor: pointer;
-  }
-  .controls label.rps-label {
-    margin-left: auto;
-    min-width: 220px;
-  }
-  .controls label.rps-label input {
-    margin-left: 0.5rem;
-    width: 120px;
-    font-family: monospace;
-  }
-
-  .runes-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit,minmax(320px,1fr));
-    gap: 1.5rem;
-  }
-
-  .rune-card {
-    background: var(--color-card-bg);
-    border-radius: 12px;
-    box-shadow: 0 3px 12px rgb(0 0 0 / 0.12);
-    padding: 1.25rem 1.5rem;
-    display: flex;
-    flex-direction: column;
-    transition: transform var(--transition), box-shadow var(--transition);
-  }
-  .rune-card:hover,
-  .rune-card:focus {
-    transform: translateY(-6px);
-    box-shadow: 0 12px 20px rgb(0 0 0 / 0.2);
-    outline: none;
-  }
-
-  .rune-title {
-    font-weight: 700;
-    font-size: 1.35rem;
-    margin-bottom: 0.2rem;
-  }
-  .rune-subtitle {
-    font-size: 1rem;
-    font-weight: 600;
-    color: var(--color-muted);
-    margin-bottom: 0.8rem;
-  }
-
-  .rune-large-num {
-    font-weight: 700;
-    font-size: 1.1rem;
-    margin-bottom: 0.7rem;
-    font-family: monospace;
-  }
-  .rune-large-num small {
-    font-weight: 400;
-    font-size: 0.9rem;
-    color: var(--color-muted);
-    margin-left: 0.4rem;
-  }
-
-  .bonuses {
-    margin-bottom: 0.7rem;
-  }
-  .bonus-item {
-    font-size: 0.9rem;
-    margin-bottom: 0.15rem;
-    line-height: 1.3;
-  }
-  .bonus-multiplier {
-    font-weight: 700;
-    color: var(--color-primary);
-    margin-right: 0.25rem;
-  }
-  .bonus-max {
-    font-weight: 400;
-    color: var(--color-muted);
-    margin-left: 0.3rem;
-  }
-  .bonus-type {
-    font-weight: 700;
-    color: #0077cc;
-    font-style: italic;
-    margin-left: 0.5rem;
-  }
-
-  .time-info {
-    font-size: 0.95rem;
-    color: var(--color-text);
-    margin-bottom: 0.15rem;
-    font-family: monospace;
-  }
-
-  .footer {
-    margin-top: 3rem;
-    font-size: 0.9rem;
-    color: var(--color-muted);
-    text-align: center;
-  }
-
-  @media (max-width: 600px) {
-    header {
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Rune Time Calculator</title>
+  <style>
+    /* Встроенные минимальные стили для удобства */
+    body {
+      margin: 0; padding: 1rem;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #121212;
+      color: #e0e0e0;
+      min-height: 100vh;
+      display: flex;
       flex-direction: column;
-      gap: 0.5rem;
+      align-items: center;
+      transition: background-color 0.3s, color 0.3s;
+    }
+    body.light {
+      background-color: #f5f5f5;
+      color: #222;
+    }
+    h1 {
+      margin-bottom: 0.5rem;
+      font-weight: 700;
+      font-size: 2rem;
       text-align: center;
     }
-    .controls {
+    #themeToggle {
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      background: transparent;
+      border: 2px solid currentColor;
+      color: inherit;
+      padding: 0.3rem 0.6rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.9rem;
+      user-select: none;
+      transition: background-color 0.3s, color 0.3s;
+      z-index: 10;
+    }
+    #themeToggle:hover, #themeToggle:focus {
+      background-color: currentColor;
+      color: var(--bg-color, #121212);
+      outline: none;
+    }
+    .container {
+      width: 100%;
+      max-width: 900px;
+      display: flex;
       flex-direction: column;
       gap: 1rem;
     }
-    .controls label.rps-label {
-      margin-left: 0;
-      min-width: auto;
-      width: 100%;
+    .card-rps {
+      background-color: #1e1e1e;
+      border-radius: 12px;
+      padding: 1rem 1.5rem;
+      box-shadow: 0 3px 12px rgb(0 0 0 / 0.5);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 1rem;
+      justify-content: center;
+      color: #cfd8dc;
+      user-select: none;
+      min-height: 68px;
     }
-    .controls label.rps-label input {
-      width: 100%;
-      margin-left: 0;
-      margin-top: 0.3rem;
+    body.light .card-rps {
+      background-color: #fff;
+      box-shadow: 0 3px 12px rgb(0 0 0 / 0.1);
+      color: #222;
     }
-  }
-</style>
+    .card-rps label {
+      font-weight: 700;
+      font-size: 1.1rem;
+      margin-right: 0.8rem;
+      user-select: text;
+    }
+    .card-rps input[type="text"] {
+      flex-grow: 1;
+      max-width: 200px;
+      padding: 0.4rem 0.6rem;
+      font-size: 1.1rem;
+      border-radius: 8px;
+      border: none;
+      background-color: #333;
+      color: #eee;
+      transition: background-color 0.3s, color 0.3s;
+      user-select: text;
+    }
+    .card-rps input[type="text"]:focus {
+      outline: 2px solid #81a1c1;
+      background-color: #222;
+      color: #fff;
+    }
+    body.light .card-rps input[type="text"] {
+      background-color: #f5f5f5;
+      color: #222;
+    }
+    body.light .card-rps input[type="text"]:focus {
+      background-color: #fff;
+      outline-color: #1a73e8;
+    }
+    .rps-values {
+      font-weight: 700;
+      font-size: 1rem;
+      min-width: 220px;
+      user-select: text;
+      color: #a8c0ff;
+    }
+    body.light .rps-values {
+      color: #3059f2;
+    }
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+    }
+    .controls > * {
+      min-width: 180px;
+      max-width: 280px;
+      flex-grow: 1;
+    }
+    input[type="text"], select {
+      width: 100%;
+      padding: 0.5rem 0.7rem;
+      font-size: 1rem;
+      border-radius: 10px;
+      border: none;
+      background-color: #222;
+      color: #eee;
+      transition: background-color 0.3s, color 0.3s;
+      user-select: text;
+    }
+    input[type="text"]:focus, select:focus {
+      outline: 2px solid #81a1c1;
+      background-color: #111;
+      color: #fff;
+    }
+    body.light input[type="text"], body.light select {
+      background-color: #fafafa;
+      color: #222;
+    }
+    body.light input[type="text"]:focus, body.light select:focus {
+      background-color: #fff;
+      outline-color: #1a73e8;
+    }
+    label.checkbox-label {
+      display: flex;
+      align-items: center;
+      color: #a8c0ff;
+      user-select: none;
+      cursor: pointer;
+      font-weight: 600;
+    }
+    body.light label.checkbox-label {
+      color: #3059f2;
+    }
+    label.checkbox-label input[type="checkbox"] {
+      margin-right: 0.5rem;
+      cursor: pointer;
+    }
+    #runesGrid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1rem;
+      margin-top: 0.8rem;
+    }
+    .rune-card {
+      background-color: #222;
+      border-radius: 14px;
+      padding: 1rem 1.2rem;
+      box-shadow: 0 4px 14px rgb(0 0 0 / 0.6);
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      color: #dfe6e9;
+    }
+    body.light .rune-card {
+      background-color: #fff;
+      box-shadow: 0 3px 12px rgb(0 0 0 / 0.15);
+      color: #222;
+    }
+    .rune-card:hover, .rune-card:focus {
+      transform: translateY(-6px);
+      box-shadow: 0 8px 20px rgb(0 0 0 / 0.8);
+      outline: none;
+      z-index: 10;
+    }
+    .rune-header {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      user-select: text;
+    }
+    .rune-title {
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: #74b9ff;
+      margin: 0;
+    }
+    body.light .rune-title {
+      color: #0984e3;
+    }
+    .rune-prefix {
+      font-weight: 700;
+      font-size: 0.85rem;
+      background-color: #ff4757;
+      color: white;
+      padding: 2px 8px;
+      border-radius: 8px;
+      user-select: none;
+      white-space: nowrap;
+      text-transform: uppercase;
+    }
+    body.light .rune-prefix {
+      background-color: #d63031;
+    }
+    .rune-subtitle {
+      font-size: 1rem;
+      color: #b2bec3;
+      user-select: text;
+    }
+    body.light .rune-subtitle {
+      color: #636e72;
+    }
+    .rune-large-num {
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: #55efc4;
+      user-select: text;
+    }
+    body.light .rune-large-num {
+      color: #00b894;
+    }
+    .boosts {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+      font-size: 0.9rem;
+      color: #dfe6e9;
+      user-select: text;
+    }
+    body.light .boosts {
+      color: #2d3436;
+    }
+    .boost-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .boost-multiplier {
+      font-weight: 700;
+      color: #00cec9;
+      user-select: text;
+    }
+    .boost-max {
+      font-style: italic;
+      color: #b2bec3;
+      user-select: text;
+    }
+    @media (max-width: 480px) {
+      .controls {
+        flex-direction: column;
+      }
+      .controls > * {
+        max-width: none;
+      }
+      .card-rps {
+        flex-direction: column;
+        align-items: flex-start;
+        min-height: auto;
+      }
+      .card-rps input[type="text"] {
+        max-width: 100%;
+      }
+      .rune-card {
+        padding: 1rem;
+      }
+    }
+  </style>
 </head>
-<body>
+<body class="dark">
+  <button id="themeToggle" aria-label="Toggle light/dark theme">Light Theme</button>
 
-<header>
-  <h1>Rune Time Calculator v1.1.0</h1>
-  <a href="https://docs.google.com/document/d/your-google-doc-id" target="_blank" rel="noopener noreferrer">
-    🚀 Comprehensive Google Doc
-  </a>
-</header>
+  <div class="container" role="main" aria-label="Rune time calculator application">
 
-<main>
-  <div class="top-stats" aria-live="polite" aria-atomic="true" id="topStats">
-    Loading current rate...
-  </div>
+    <h1>Rune Time Calculator</h1>
 
-  <section class="controls" aria-label="Rune filters and sorting">
-    <input
-      type="text"
-      id="searchInput"
-      placeholder="Filter runes by name..."
-      aria-label="Filter runes by name"
-      autocomplete="off"
-    />
-    <label for="hideInstant">
-      <input type="checkbox" id="hideInstant" />
-      Hide Instant
-    </label>
-    <select id="sortSelect" aria-label="Sort runes">
-      <option value="easiest">Easiest First</option>
-      <option value="name">Name A-Z</option>
-      <option value="time">Time Ascending</option>
-      <option value="rating">Rating Descending</option>
-    </select>
-    <label for="userRPS" class="rps-label">
-      Your RPS:
+    <section class="card-rps" aria-label="Your current rate input">
+      <label for="userRPSInput">Enter your RPS:</label>
       <input
         type="text"
-        id="userRPS"
-        placeholder="e.g. 1e5 or 100K"
-        aria-label="User Runes per Second"
-        value="1"
+        id="userRPSInput"
+        aria-describedby="currentRateParsed"
+        placeholder="e.g. 1e5, 100K"
+        autocomplete="off"
+        value="1e5"
       />
-    </label>
-  </section>
+      <div class="rps-values" id="currentRateParsed" aria-live="polite" aria-atomic="true">
+        Parsed Rate: 1
+      </div>
+    </section>
 
-  <section class="runes-grid" id="runesGrid" aria-live="polite" aria-label="Runes list">
-    <!-- Rune cards injected here -->
-  </section>
-</main>
+    <section class="controls" aria-label="Rune filters and sorting controls">
+      <input
+        type="text"
+        id="searchInput"
+        aria-label="Filter runes by name"
+        placeholder="Filter runes by name..."
+        autocomplete="off"
+      />
+      <label class="checkbox-label" for="hideInstantCheckbox">
+        <input type="checkbox" id="hideInstantCheckbox" />
+        Hide Instant
+      </label>
+      <select id="sortSelect" aria-label="Sort runes">
+        <option value="easiest" selected>Easiest First</option>
+        <option value="name">Name</option>
+        <option value="time">Time</option>
+        <option value="rating">Rating</option>
+      </select>
+    </section>
 
-<footer class="footer">
-  &copy; 2025 Rune Time Calculator
-</footer>
+    <section id="runesGrid" aria-label="Runes list">
+      <!-- Rune cards go here -->
+    </section>
 
-<script src="runes.js"></script>
-<script src="main.js"></script>
+  </div>
 
+  <script src="runes.js"></script>
+  <script src="main.js"></script>
 </body>
 </html>
