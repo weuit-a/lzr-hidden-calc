@@ -1,45 +1,389 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rune Time Calculator</title>
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Rune Time Calculator</title>
+<style>
+  /* Основные стили */
+  :root {
+    --color-primary: #3a86ff;
+    --color-bg: #f5f7fa;
+    --color-card-bg: #ffffff;
+    --color-text: #333;
+    --color-muted: #666;
+    --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    --transition: 0.3s ease;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    font-family: var(--font-family);
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
+  header {
+    background-color: var(--color-primary);
+    color: white;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  header h1 {
+    margin: 0;
+    font-weight: 700;
+    font-size: 1.5rem;
+  }
+
+  header a {
+    color: #dbe9ff;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s;
+  }
+
+  header a:hover {
+    color: white;
+    text-decoration: underline;
+  }
+
+  main {
+    flex-grow: 1;
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  /* Панель управления */
+  .controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    align-items: center;
+  }
+
+  .controls input[type="text"] {
+    flex-grow: 1;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    transition: border-color var(--transition);
+  }
+
+  .controls input[type="text"]:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 5px var(--color-primary);
+  }
+
+  .controls label {
+    display: flex;
+    align-items: center;
+    font-size: 0.95rem;
+    color: var(--color-muted);
+    cursor: pointer;
+  }
+
+  .controls label input[type="checkbox"] {
+    margin-right: 0.5rem;
+    cursor: pointer;
+  }
+
+  .controls select {
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: border-color var(--transition);
+  }
+
+  .controls select:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 5px var(--color-primary);
+  }
+
+  /* Карточки рун */
+  .runes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(220px,1fr));
+    gap: 1.5rem;
+  }
+
+  .rune-card {
+    background: var(--color-card-bg);
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgb(0 0 0 / 0.1);
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    transition: transform var(--transition), opacity var(--transition);
+  }
+
+  .rune-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgb(0 0 0 / 0.15);
+  }
+
+  .rune-icon {
+    font-size: 3rem;
+    align-self: center;
+    margin-bottom: 0.5rem;
+    color: var(--color-primary);
+  }
+
+  .rune-name {
+    font-weight: 700;
+    font-size: 1.2rem;
+    margin: 0.3rem 0;
+    text-align: center;
+  }
+
+  .rune-time {
+    color: var(--color-muted);
+    font-size: 1rem;
+    text-align: center;
+    margin-bottom: 0.5rem;
+  }
+
+  .rune-rating {
+    margin-top: auto;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--color-primary);
+    text-align: center;
+  }
+
+  /* Статистика */
+  .stats {
+    margin-top: 2rem;
+    font-size: 1.1rem;
+    color: var(--color-text);
+    border-top: 1px solid #ddd;
+    padding-top: 1rem;
+  }
+
+  /* Адаптивность */
+  @media (max-width: 600px) {
+    header {
+      flex-direction: column;
+      gap: 0.5rem;
+      text-align: center;
+    }
+
+    .controls {
+      flex-direction: column;
+      gap: 0.8rem;
+    }
+  }
+</style>
 </head>
 <body>
-    <header class="header">
-        <h1>Rune Time Calculator</h1>
-        <p>A strategic tool for planning your progression. Times shown are for a single rune.</p>
-        <a href="#" class="info-link">📄 Check out the Comprehensive Google Doc!</a>
-    </header>
 
-    <nav class="tabs">
-        <button class="tab active">Rune Calculator</button>
-    </nav>
+<header>
+  <h1>Rune Time Calculator</h1>
+  <a href="https://docs.google.com/document/d/your-google-doc-id" target="_blank" rel="noopener noreferrer">
+    📄 Comprehensive Google Doc
+  </a>
+</header>
 
-    <main class="container">
-        <section class="rate-section fade-in">
-            <h2>My Current Rate</h2>
-            <input id="rateInput" type="text" placeholder="Enter your rate (e.g. 16.74tg)">
-            <p id="parsedRate" class="parsed-rate">Parsed Rate: 0 RPS</p>
-        </section>
+<main>
+  <section class="controls" aria-label="Rune filters and sorting">
+    <input
+      type="text"
+      id="searchInput"
+      placeholder="Filter runes by name..."
+      aria-label="Filter runes by name"
+      autocomplete="off"
+    />
+    <label for="hideInstant">
+      <input type="checkbox" id="hideInstant" />
+      Hide Instant Runes
+    </label>
+    <select id="sortSelect" aria-label="Sort runes">
+      <option value="easiest">Easiest First</option>
+      <option value="name">Name A-Z</option>
+      <option value="time">Time Ascending</option>
+      <option value="rating">Rating Descending</option>
+    </select>
+  </section>
 
-        <section class="filter-section fade-in">
-            <input type="text" id="filterInput" placeholder="Filter runes by name...">
-            <label><input type="checkbox" id="hideInstant" checked> Hide Instant</label>
-            <select id="sortOrder">
-                <option value="easy">Easiest First</option>
-                <option value="hard">Hardest First</option>
-            </select>
-        </section>
+  <section class="runes-grid" id="runesGrid" aria-live="polite" aria-label="Runes list">
+    <!-- Карточки рун будут вставлены сюда динамически -->
+  </section>
 
-        <section id="runeList" class="rune-list"></section>
-    </main>
+  <section class="stats" id="statsSection" aria-live="polite" aria-atomic="true">
+    <!-- Статистика пользователя -->
+  </section>
+</main>
 
-    <footer class="fade-in">
-        <p>&copy; 2025 Rune Time Calculator</p>
-    </footer>
+<script>
+  // Данные рун — пример
+  const runes = [
+    {
+      id: 1,
+      name: "Flame Rune",
+      time: 120, // в секундах
+      rating: 4.5,
+      instant: false,
+      icon: "🔥",
+    },
+    {
+      id: 2,
+      name: "Water Rune",
+      time: 30,
+      rating: 3.7,
+      instant: true,
+      icon: "💧",
+    },
+    {
+      id: 3,
+      name: "Earth Rune",
+      time: 180,
+      rating: 4.9,
+      instant: false,
+      icon: "🌍",
+    },
+    {
+      id: 4,
+      name: "Wind Rune",
+      time: 15,
+      rating: 3.2,
+      instant: true,
+      icon: "💨",
+    },
+    {
+      id: 5,
+      name: "Light Rune",
+      time: 300,
+      rating: 5.0,
+      instant: false,
+      icon: "✨",
+    },
+    // Добавьте больше рун по необходимости
+  ];
 
-    <script src="script.js"></script>
+  // Элементы управления
+  const searchInput = document.getElementById("searchInput");
+  const hideInstantCheckbox = document.getElementById("hideInstant");
+  const sortSelect = document.getElementById("sortSelect");
+  const runesGrid = document.getElementById("runesGrid");
+  const statsSection = document.getElementById("statsSection");
+
+  // Форматирование времени в мин:сек
+  function formatTime(seconds) {
+    const m = Math.floor(seconds / 60);
+    const s = seconds % 60;
+    return m > 0 ? `${m}m ${s}s` : `${s}s`;
+  }
+
+  // Отрисовка карточек рун
+  function renderRunes() {
+    const filterText = searchInput.value.toLowerCase();
+    const hideInstant = hideInstantCheckbox.checked;
+    const sortBy = sortSelect.value;
+
+    // Фильтрация
+    let filteredRunes = runes.filter(rune => {
+      const matchName = rune.name.toLowerCase().includes(filterText);
+      const matchInstant = hideInstant ? !rune.instant : true;
+      return matchName && matchInstant;
+    });
+
+    // Сортировка
+    filteredRunes.sort((a, b) => {
+      switch (sortBy) {
+        case "easiest":
+          // Считаем "легче" руну ту, у которой меньше времени
+          return a.time - b.time;
+        case "name":
+          return a.name.localeCompare(b.name);
+        case "time":
+          return a.time - b.time;
+        case "rating":
+          return b.rating - a.rating;
+        default:
+          return 0;
+      }
+    });
+
+    // Отрисовка
+    runesGrid.innerHTML = "";
+
+    if (filteredRunes.length === 0) {
+      runesGrid.innerHTML = `<p>No runes found.</p>`;
+      statsSection.textContent = "";
+      return;
+    }
+
+    filteredRunes.forEach(rune => {
+      const card = document.createElement("article");
+      card.className = "rune-card";
+      card.setAttribute("tabindex", "0");
+
+      card.innerHTML = `
+        <div class="rune-icon" aria-hidden="true">${rune.icon}</div>
+        <h3 class="rune-name">${rune.name}</h3>
+        <div class="rune-time">Time: ${formatTime(rune.time)}</div>
+        <div class="rune-rating">Rating: ${rune.rating.toFixed(1)}</div>
+      `;
+
+      runesGrid.appendChild(card);
+    });
+
+    // Обновление статистики
+    updateStats(filteredRunes);
+  }
+
+  // Обновление статистики
+  function updateStats(runesArray) {
+    const totalTime = runesArray.reduce((sum, r) => sum + r.time, 0);
+    // Допустим, рейтинг - среднее арифметическое
+    const avgRating =
+      runesArray.reduce((sum, r) => sum + r.rating, 0) / runesArray.length;
+
+    // Допустим, скорость получения — 1 руна / среднее время
+    const avgTime = totalTime / runesArray.length;
+    const rps = avgTime ? (1 / avgTime).toFixed(3) : "0";
+
+    statsSection.innerHTML = `
+      <strong>Current Stats:</strong><br/>
+      Total Runes: ${runesArray.length} <br/>
+      Total Time: ${formatTime(totalTime)} <br/>
+      Average Rating: ${avgRating.toFixed(2)} <br/>
+      Speed: ${rps} RPS (Runes per second)
+    `;
+  }
+
+  // Обработчики событий
+  searchInput.addEventListener("input", () => {
+    renderRunes();
+  });
+
+  hideInstantCheckbox.addEventListener("change", () => {
+    renderRunes();
+  });
+
+  sortSelect.addEventListener("change", () => {
+    renderRunes();
+  });
+
+  // Инициализация
+  renderRunes();
+</script>
+
 </body>
 </html>
