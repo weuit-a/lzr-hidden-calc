@@ -8,8 +8,8 @@ const runes = [
     baseUnit: "Tg",
     bonuses: [
       { multiplier: 2, name: "Rune Speed", max: "3 M", type: "EXPONENTIAL" },
-      { multiplier: 1, name: "Rune Bulk", max: "3", type: "EXP" },
-      { multiplier: 2, name: "Tickets", max: "1 DDe", type: "EXP" },
+      { multiplier: 1, name: "Rune Bulk", max: "3", type: "" },
+      { multiplier: 2, name: "Tickets", max: "1 DDe", type: "" },
     ],
   },
   {
@@ -31,9 +31,9 @@ const runes = [
     baseAmountScientific: 2e+109,
     baseUnit: "QnTg",
     bonuses: [
-      { multiplier: 1, name: "Rune Bulk", max: "10 K", type: "EXP" },
-      { multiplier: 1, name: "Rune Bulk", max: "50", type: "EXP" },
-      { multiplier: 1, name: "Rune Speed", max: "50", type: "EXP" },
+      { multiplier: 1, name: "Rune Bulk", max: "10 K", type: "" },
+      { multiplier: 1, name: "Rune Bulk", max: "50", type: "" },
+      { multiplier: 1, name: "Rune Speed", max: "50", type: "" },
     ],
   },
 ];
