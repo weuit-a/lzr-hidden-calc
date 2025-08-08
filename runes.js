@@ -1,31 +1,165 @@
-export const runes = [
-  {
-    id: 1,
-    name: "Vanta",
-    type: "Color Rune",
-    baseAmountScientific: 1e95,
-    chance: 1e95,
-    boosts: [
-      { name: "Rune Speed", multiplier: 2, max: 3 },
-      { name: "Rune Bulk", multiplier: 1, max: 3 },
-      { name: "Tickets", multiplier: 2, max: 1 },
-    ],
-    exponential: false,
-    prefix: "",
-  },
-  {
-    id: 2,
-    name: "Frostbite",
-    type: "Arctic Rune",
-    baseAmountScientific: 1e103,
-    chance: 1e103,
-    boosts: [
-      { name: "Rune Speed", multiplier: 1.01, max: 100000 },
-    ],
-    exponential: true,
-    exponentialBase: 1.0000025,
-    exponentialAmount: 1e6,
-    prefix: "LIMITED",
-  },
-  // добавляй остальные руны сюда
+import { runes } from "./runes.js";
+
+const suffixesArr = [
+  { suffix: "TgCe", power: 1e393 },
+  { suffix: "NoTg", power: 1e120 },
+  { suffix: "OcTg", power: 1e117 },
+  { suffix: "SpTg", power: 1e114 },
+  { suffix: "SxTg", power: 1e111 },
+  { suffix: "QnTg", power: 1e108 },
+  { suffix: "QdTg", power: 1e105 },
+  { suffix: "TTg", power: 1e102 },
+  { suffix: "DTg", power: 1e99 },
+  { suffix: "UTg", power: 1e96 },
+  { suffix: "Tg", power: 1e93 },
+  { suffix: "NoVt", power: 1e90 },
+  { suffix: "OcVt", power: 1e87 },
+  { suffix: "SpVt", power: 1e84 },
+  { suffix: "SxVt", power: 1e81 },
+  { suffix: "QnVt", power: 1e78 },
+  { suffix: "QdVt", power: 1e75 },
+  { suffix: "TVt", power: 1e72 },
+  { suffix: "DVt", power: 1e69 },
+  { suffix: "UVt", power: 1e66 },
+  { suffix: "Vt", power: 1e63 },
+  { suffix: "NoDe", power: 1e60 },
+  { suffix: "OcDe", power: 1e57 },
+  { suffix: "SpDe", power: 1e54 },
+  { suffix: "SxDe", power: 1e51 },
+  { suffix: "QnDe", power: 1e48 },
+  { suffix: "QdDe", power: 1e45 },
+  { suffix: "TDe", power: 1e42 },
+  { suffix: "DDe", power: 1e39 },
+  { suffix: "UDe", power: 1e36 },
+  { suffix: "No", power: 1e30 },
+  { suffix: "Oc", power: 1e27 },
+  { suffix: "Sp", power: 1e24 },
+  { suffix: "Sx", power: 1e21 },
+  { suffix: "Qn", power: 1e18 },
+  { suffix: "Qd", power: 1e15 },
+  { suffix: "T", power: 1e12 },
+  { suffix: "B", power: 1e9 },
+  { suffix: "M", power: 1e6 },
+  { suffix: "K", power: 1e3 },
 ];
+
+function formatWithSuffix(num) {
+  if (!isFinite(num)) return "∞";
+  if (num === 0) return "0";
+
+  for (const { suffix, power } of suffixesArr) {
+    if (num >= power) {
+      const val = num / power;
+      const valStr = val.toFixed(2).replace(/\.?0+$/, "");
+      return `${valStr}${suffix}`;
+    }
+  }
+  return num.toString();
+}
+
+function parseRPSInput(input) {
+  // Парсим число с суффиксом, например 1e5, 100Tg, 2.5M и т.п.
+  input = input.trim();
+  // Попытка сразу в число
+  let num = Number(input);
+  if (!isNaN(num)) return num;
+
+  // Регекс для парсинга (число + суффикс)
+  const regex = /^([\d.]+)\s*([a-zA-Z]+)$/;
+  const match = input.match(regex);
+  if (!match) return NaN;
+
+  const [, numberPart, suffixPart] = match;
+  const baseNum = Number(numberPart);
+  if (isNaN(baseNum)) return NaN;
+
+  // Найдём степень по суффиксу (без учёта регистра)
+  const sufObj = suffixesArr.find(s => s.suffix.toLowerCase() === suffixPart.toLowerCase());
+  if (!sufObj) return NaN;
+
+  return baseNum * sufObj.power;
+}
+
+function formatTime(seconds) {
+  if (seconds < 1) return "Instant";
+
+  const days = Math.floor(seconds / (3600 * 24));
+  seconds %= 3600 * 24;
+  const hours = Math.floor(seconds / 3600);
+  seconds %= 3600;
+  const mins = Math.floor(seconds / 60);
+  seconds = Math.floor(seconds % 60);
+
+  const parts = [];
+  if (days) parts.push(`${days}d`);
+  if (hours) parts.push(`${hours}h`);
+  if (mins) parts.push(`${mins}m`);
+  if (seconds || parts.length === 0) parts.push(`${seconds}s`);
+
+  return parts.join(", ");
+}
+
+const runesGrid = document.getElementById("runesGrid");
+const rpsInput = document.getElementById("rpsInput");
+const currentRateDisplay = document.getElementById("currentRate");
+const parsedRateDisplay = document.getElementById("parsedRate");
+
+let currentRPS = 1e12; // по умолчанию 1T
+
+function renderRunes() {
+  runesGrid.innerHTML = "";
+
+  runes.forEach(rune => {
+    // Расчёт времени получения = шанс / RPS
+    let timeSeconds = rune.chance / currentRPS;
+
+    // Если exponential, то пока не считаем время до макс буста (по твоему условию)
+    // Просто считаем время до 1 руны (возможно можно убрать)
+
+    const timeStr = formatTime(timeSeconds);
+
+    // Форматируем шансы и число руны
+    const chanceStr = formatWithSuffix(rune.chance);
+    const baseAmountStr = formatWithSuffix(rune.baseAmountScientific);
+
+    // Формируем boosts
+    const boostsStr = rune.boosts.map(b => 
+      `${b.multiplier}x ${b.name} (Max: ${b.max})`
+    ).join(", ");
+
+    const prefixStr = rune.prefix ? `<span class="rune-prefix">${rune.prefix}</span>` : "";
+
+    const cardHTML = `
+      <article class="rune-card">
+        <h3>${prefixStr} ${rune.name}</h3>
+        <p><em>${rune.type}</em></p>
+        <p>Chance: ${chanceStr}</p>
+        <p>Boosts: ${boostsStr}</p>
+        <p>Time to get: <strong>${timeStr}</strong></p>
+      </article>
+    `;
+
+    runesGrid.insertAdjacentHTML("beforeend", cardHTML);
+  });
+}
+
+function updateRPS() {
+  const val = rpsInput.value;
+  const parsed = parseRPSInput(val);
+
+  if (!isNaN(parsed) && parsed > 0) {
+    currentRPS = parsed;
+    currentRateDisplay.textContent = `My Current Rate: ${val}`;
+    parsedRateDisplay.textContent = `Parsed Rate: ${formatWithSuffix(parsed)} RPS`;
+  } else {
+    currentRateDisplay.textContent = "My Current Rate: Invalid input";
+    parsedRateDisplay.textContent = "";
+  }
+
+  renderRunes();
+}
+
+rpsInput.addEventListener("input", updateRPS);
+
+// Инициализация
+updateRPS();
