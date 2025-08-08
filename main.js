@@ -2,6 +2,7 @@ import { runes } from "./runes.js";
 
 const suffixesArr = [
   { suffix: "TgCe", power: 1e393 },
+  { suffix: "Ce", power: 1e303},
   { suffix: "NoTg", power: 1e120 },
   { suffix: "OcTg", power: 1e117 },
   { suffix: "SpTg", power: 1e114 },
