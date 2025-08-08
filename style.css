@@ -1,0 +1,102 @@
+/* Базовые стили */
+body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, sans-serif;
+    line-height: 1.6;
+    color: #333;
+}
+
+/* Контейнер */
+.container {
+    width: 90%;
+    max-width: 1100px;
+    margin: auto;
+}
+
+/* Шапка */
+.header {
+    background: #4A90E2;
+    color: #fff;
+    padding: 15px 0;
+}
+.header .logo {
+    margin: 0;
+}
+.nav {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+}
+.nav a {
+    color: white;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+.nav a:hover {
+    color: #FFD700;
+}
+
+/* Герой */
+.hero {
+    background: linear-gradient(135deg, #4A90E2, #50C9CE);
+    color: white;
+    text-align: center;
+    padding: 100px 20px;
+}
+.btn {
+    display: inline-block;
+    margin-top: 15px;
+    padding: 10px 20px;
+    background: #FFD700;
+    color: #333;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: 0.3s;
+}
+.btn:hover {
+    background: #ffcc00;
+}
+
+/* Секции */
+.section {
+    padding: 60px 20px;
+    text-align: center;
+}
+.alt-bg {
+    background: #f9f9f9;
+}
+
+/* Карточки */
+.cards {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+.card {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    flex: 1 1 250px;
+    transition: transform 0.3s;
+}
+.card:hover {
+    transform: translateY(-5px);
+}
+
+/* Подвал */
+.footer {
+    background: #333;
+    color: white;
+    padding: 20px 0;
+    text-align: center;
+}
+
+/* Адаптив */
+@media (max-width: 768px) {
+    .nav {
+        flex-direction: column;
+        align-items: center;
+    }
+}
