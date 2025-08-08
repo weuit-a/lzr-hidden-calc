@@ -40,5 +40,26 @@ const runes = [
       { text: "x1 Rune Speed", maxBoost: 50 },
     ],
   },
-  
+  {
+    id: "earth",
+    name: "Earth",
+    subtitle: "Exponential Rune",
+    baseAmountScientific: 1e100,
+    rating: 50,
+    boosts: [
+      { text: "x1.0000025^Earth", maxBoost: null },
+    ],
+  },
+  {
+    id: "instantRune",
+    name: "Flash",
+    prefix: "INSTANT",
+    subtitle: "Instant Rune",
+    baseAmountScientific: 1e50,
+    rating: 5,
+    boosts: [
+      { text: "Instant effect", maxBoost: null },
+    ],
+  },
+  // Добавляйте другие руны по необходимости...
 ];
