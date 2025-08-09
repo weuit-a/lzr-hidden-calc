@@ -574,19 +574,6 @@ export const runes = [
   },
   {
     id: 45,
-    name: "Planet",
-    type: "Galactic Rune",
-    baseAmountScientific: 3.3e238,
-    chance: 3.3e238,
-    boosts: [
-      { name: "+75K Rune Bulk", multiplier: 1, max: 2.5e13 },
-      { name: "^1 Rune Bulk", multiplier: 1, max: 1.035 },
-    ],
-    exponential: false,
-    prefix: "",
-  },
-  {
-    id: 46,
     name: "Onyx",
     type: "Color Rune",
     baseAmountScientific: 3.33e248,
@@ -599,7 +586,7 @@ export const runes = [
     prefix: "",
   },
   {
-    id: 47,
+    id: 46,
     name: "Strix",
     type: "Basic Rune",
     baseAmountScientific: 2.5e256,
@@ -611,7 +598,7 @@ export const runes = [
     prefix: "",
   },
   {
-    id: 48,
+    id: 47,
     name: "Liberty",
     type: "5M Royal",
     baseAmountScientific: 3.5e256,
@@ -625,7 +612,7 @@ export const runes = [
     prefix: "LIMITED",
   },
   {
-    id: 49,
+    id: 48,
     name: "Rocket",
     type: "Galactic Rune",
     baseAmountScientific: 1.5e260,
@@ -638,7 +625,7 @@ export const runes = [
     prefix: "",
   },
   {
-    id: 50,
+    id: 49,
     name: "Vanguard",
     type: "5M Beginner",
     baseAmountScientific: 6.66e267,
@@ -653,7 +640,7 @@ export const runes = [
     prefix: "",
   },
   {
-    id: 51,
+    id: 50,
     name: "Bozo",
     type: "Cryo Rune",
     baseAmountScientific: 2e294,
@@ -666,7 +653,7 @@ export const runes = [
     prefix: "",
   },
   {
-    id: 52,
+    id: 51,
     name: "Nexus",
     type: "Basic Rune",
     baseAmountScientific: 1e303,
