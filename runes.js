@@ -672,7 +672,7 @@ export const runes = [
     baseAmountScientific: 1e303,
     chance: 1e303,
     boosts: [
-      { name: "x1.01 Chrome, multiplier: 1, max: 1e303 },
+      { name: "x1.01 Chrome", multiplier: 1, max: 1e303 },
       { name: "x1.02 Tickets", multiplier: 1, max: 1e303 },
     ],
     exponential: false,
